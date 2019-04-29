@@ -15,7 +15,7 @@ git:
 env:
   global:
   - PACKAGE=v2ray-core
-  - USER=jasdada
+  - USER=jsda
   - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
   - DOWNLOAD_DIR=${HOME}/files
@@ -85,5 +85,4 @@ deploy:
   on:
     tags: true
     all_branches: true
-  api_key:
-    secure: ${TOKEN}
+  github-token: $GITHUB_TOKEN
