@@ -15,6 +15,8 @@ git:
 env:
   global:
   - PACKAGE=v2ray-core
+  - USER=jsda
+  - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
   - DOWNLOAD_DIR=${HOME}/files
   matrix:
@@ -77,8 +79,11 @@ script:
 - ls -hl "$TRAVIS_BUILD_DIR" | grep .*\.ipk
 deploy:
   provider: releases
+  file_glob: true
+  file: "${TRAVIS_BUILD_DIR}/*.ipk"
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
   api_key:
     secure: rnS58NYfuUoN5lxwUkCKjyYS0bEk3CnDYIrTQVtvsjRUlTRpGDIXLg3TXQnGr80QKgFUVj3EYBKCbQjqNMV3RM2sEY/Lk9ja1/W2YB2jFpAhTHuP28rxORLc2nPer0OtRgZ/VRcWCa+QOah79stliFBofYVabqxgeTC1zl2QV+w8jjnMMHCmT3DPG5kFthidN9XhEYzT9bN7YeAPyZfrpackKHOhftIfkUdaPjR+vzf3QMaqy9M5atw9j209NBHkDrAMvn32sA98+/X4E8uquET9k3UvgIm9ITH2pK+kksOK+prC6RfkNYyxsVdSNhlTAubrj+4ZCLXBCoz1+S6qcOF+20iHBg7QBY7/Ng49HcEJfX1mmoIFloAG+B7j3ZT3kk+GQbNAe0CqvX18Ae7DIV+tC8di/7jj9y9Aq6E/+Zo0tgHgBgCnCQpwi3r9F6zy1V4KNZvJ2pJaPkD+DvywFEiBLL91OlHLbhJMXM0mOioCCYpvkK7boQj2gHudKz121KDIp37lmpZiwI9LuIrTOEPwH2j9cMwYwLj7u6HQH7Vs+pblucZA0yNoycl/4WJv69ixauDZXU7ZMJCwKgrLCfEH6ldux/6i+2E/8llznavduLCd0Itk4B3OzUzaydngtixJevujdBmXlZvq227kfZ6fhWKyXSF0ElYrhTF+Hjc=
-  file: "${TRAVIS_BUILD_DIR}/*.ipk"
-  on:
-    repo: jsda/openwrt-v2ray
