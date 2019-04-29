@@ -15,8 +15,6 @@ git:
 env:
   global:
   - PACKAGE=v2ray-core
-  - USER=jsda
-  - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
   - DOWNLOAD_DIR=${HOME}/files
   matrix:
