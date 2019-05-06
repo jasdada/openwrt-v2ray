@@ -36,6 +36,7 @@ env:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/generic SDK=-sdk-x86-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
+- chmod +x $TRAVIS_BUILD_DIR/tag.sh
 - $TRAVIS_BUILD_DIR/tag.sh
 - echo "v2ray releases ${TRAVIS_TAG}"
 - |
