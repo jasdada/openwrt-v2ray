@@ -25,10 +25,8 @@ env:
   - USER=jsda
   - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
-  - TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | cat)
-wget https://github.com/v2ray/v2ray-core/releases/download/$TRAVIS_TAG/v2ray-linux-64.zip
-sed -i '11s/^.*/PKG_VERSION:=$TRAVIS_TAG/'
   - DOWNLOAD_DIR=${HOME}/files
+  - TRAVIS_TAG=`cat tag.txt`
   matrix:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ar71xx/generic SDK=-sdk-ar71xx-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ramips/mt7620 SDK=-sdk-ramips-mt7620_
@@ -39,6 +37,7 @@ sed -i '11s/^.*/PKG_VERSION:=$TRAVIS_TAG/'
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/generic SDK=-sdk-x86-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
+- curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' > tag.txt
 - |
   if [ -z "${TRAVIS_TAG}" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
     travis_terminate 0
