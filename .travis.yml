@@ -25,6 +25,7 @@ env:
   - USER=jsda
   - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
+  - TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
   - DOWNLOAD_DIR=${HOME}/files
   matrix:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ar71xx/generic SDK=-sdk-ar71xx-generic_
@@ -37,10 +38,9 @@ env:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
 - |
-  if [ "x$SDK" != "x-sdk-x86-64_" ] ; then
+  if [ -z "$TRAVIS_TAG" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
     travis_terminate 0
   fi
-- TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 - mkdir -p "$DOWNLOAD_DIR" && cd "$DOWNLOAD_DIR"
 - wget -c "http://us.archive.ubuntu.com/ubuntu/pool/main/c/ccache/ccache_${CCACHE_VERSION}-1_amd64.deb"
 - mkdir -p "${HOME}/local"
