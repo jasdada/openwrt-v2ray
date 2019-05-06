@@ -26,6 +26,7 @@ env:
   - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
   - DOWNLOAD_DIR=${HOME}/files
+  - TRAVIS_TAG=`cat /home/travis/tag.txt`
   matrix:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ar71xx/generic SDK=-sdk-ar71xx-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ramips/mt7620 SDK=-sdk-ramips-mt7620_
@@ -36,7 +37,7 @@ env:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/generic SDK=-sdk-x86-generic_
   #- SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
-- TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') &&
+- curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' > /home/travis/tag.txt
 - |
   if [ -z "${TRAVIS_TAG}" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
     travis_terminate 0
