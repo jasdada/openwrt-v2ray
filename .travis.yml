@@ -26,6 +26,7 @@ env:
   - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
   - DOWNLOAD_DIR=${HOME}/files
+  - TRAVIS_TAG=$(cat "/home/travis/build/tag.txt")
   matrix:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ar71xx/generic SDK=-sdk-ar71xx-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ramips/mt7620 SDK=-sdk-ramips-mt7620_
