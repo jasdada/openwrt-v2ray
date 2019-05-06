@@ -34,10 +34,10 @@ env:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/brcm47xx/generic SDK=-sdk-brcm47xx-
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ipq806x/generic SDK=-sdk-ipq806x_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/generic SDK=-sdk-x86-generic_
-  - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
+  #- SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
+- TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') && \
 - |
-  TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
   if [ -z "${TRAVIS_TAG}" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
     travis_terminate 0
   fi
