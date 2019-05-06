@@ -1,9 +1,16 @@
-dist: trusty
+dist: xenial
 sudo: false
 notifications:
   email: false
 language: c
 compiler: gcc
+addons:
+  apt:
+    packages:
+    - libssl-dev
+    - libev-dev
+    - libc-ares-dev
+    - libudns-dev
 cache:
   bundler: true
   directories:
@@ -18,6 +25,7 @@ env:
   - USER=jsda
   - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
+  - TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
   - DOWNLOAD_DIR=${HOME}/files
   matrix:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ar71xx/generic SDK=-sdk-ar71xx-generic_
@@ -29,7 +37,6 @@ env:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/generic SDK=-sdk-x86-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
-- - TRAVIS_TAG=$(curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 - |
   if [ -z "$TRAVIS_TAG" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
     travis_terminate 0
