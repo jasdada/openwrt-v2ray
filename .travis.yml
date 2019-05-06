@@ -37,8 +37,8 @@ env:
   #- SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/generic SDK=-sdk-x86-generic_
   #- SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
-- curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' > /home/travis/tag.txt
 - |
+  curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' > /home/travis/tag.txt
   if [ -z "${TRAVIS_TAG}" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
     travis_terminate 0
   fi
