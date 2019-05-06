@@ -38,7 +38,7 @@ env:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
 - |
-  if [ -z "$TRAVIS_TAG" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
+  if [ -z "${TRAVIS_TAG}" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
     travis_terminate 0
   fi
 - mkdir -p "$DOWNLOAD_DIR" && cd "$DOWNLOAD_DIR"
@@ -76,7 +76,7 @@ install:
 - echo "src-git routing https://git.openwrt.org/feed/routing.git" >>feeds.conf
 - echo "src-git telephony https://github.com/openwrt/telephony.git" >>feeds.conf
 - ln -s "$TRAVIS_BUILD_DIR" "package/${PACKAGE}"
-- sed -i '11s/^.*/PKG_VERSION:=$TRAVIS_TAG/' "package/${PACKAGE}/Makefile"
+- sed -i '11s/^.*/PKG_VERSION:=${TRAVIS_TAG}/' "package/${PACKAGE}/Makefile"
 script:
 - cd "$SDK_HOME"
 - "./scripts/feeds update -a >/dev/null"
