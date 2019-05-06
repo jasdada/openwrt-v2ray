@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=v2ray-core
-PKG_VERSION:=4.18.1
-PKG_RELEASE:=2
+PKG_VERSION:=4.18.0
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/v2ray/v2ray-core/tar.gz/v$(PKG_VERSION)?
@@ -159,9 +159,9 @@ $(foreach component,$(V2RAY_COMPONENTS), \
   $(eval $(call GoBinPackage,$(component))) \
   $(eval $(call BuildPackage,$(component))) \
 )
-$(eval $(call BuildPackage,v2ray-assets))
+#$(eval $(call BuildPackage,v2ray-assets))
 
-$(eval $(call GoBinPackage,v2ray-core))
+#$(eval $(call GoBinPackage,v2ray-core))
 $(eval $(call BuildPackage,v2ray-core))
-$(eval $(call GoSrcPackage,golang-v2ray-core-dev))
-$(eval $(call BuildPackage,golang-v2ray-core-dev))
+#$(eval $(call GoSrcPackage,golang-v2ray-core-dev))
+#$(eval $(call BuildPackage,golang-v2ray-core-dev))
