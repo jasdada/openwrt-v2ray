@@ -164,12 +164,12 @@ endef
 
 
 #$(foreach component,$(V2RAY_COMPONENTS), \
-  $(eval $(call GoBinPackage,$(component))) \
-  $(eval $(call BuildPackage,$(component))) \
+  #$(eval $(call GoBinPackage,$(component))) \
+  #$(eval $(call BuildPackage,$(component))) \
 )
 #$(eval $(call BuildPackage,v2ray-assets))
 
-#$(eval $(call GoBinPackage,v2ray-core))
+$(eval $(call GoBinPackage,v2ray-core))
 $(eval $(call BuildPackage,v2ray-core))
 #$(eval $(call GoSrcPackage,golang-v2ray-core-dev))
 #$(eval $(call BuildPackage,golang-v2ray-core-dev))
