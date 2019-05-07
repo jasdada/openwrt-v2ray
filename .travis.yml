@@ -26,7 +26,7 @@ env:
   - REPO=openwrt-v2ray
   - CCACHE_VERSION=3.6
   - DOWNLOAD_DIR=${HOME}/files
-  - TRAVIS_TAG=$(date +%Y%m%d)
+  #- TRAVIS_TAG=$(date +%Y%m%d)
   matrix:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ar71xx/generic SDK=-sdk-ar71xx-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ramips/mt7620 SDK=-sdk-ramips-mt7620_
@@ -38,7 +38,7 @@ env:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
 install:
 - (curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -E 's/v//') > "$TRAVIS_BUILD_DIR/tag.txt"
-#- export TRAVIS_TAG=$(cat "$TRAVIS_BUILD_DIR/tag.txt")
+- export TRAVIS_TAG=$(cat "$TRAVIS_BUILD_DIR/tag.txt")
 - sed -i "11s/^.*/PKG_VERSION:=$(cat $TRAVIS_BUILD_DIR/tag.txt)/" "$TRAVIS_BUILD_DIR/Makefile"
 - echo "v2ray releases v$(cat $TRAVIS_BUILD_DIR/tag.txt)-$TRAVIS_TAG"
 - |
