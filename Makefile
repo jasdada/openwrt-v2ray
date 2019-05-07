@@ -8,12 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=v2ray-core
+SRCDIR:=
+ifneq (,$(SRCDIR))
+PKG_VERSION:=$(shell cd $(SRCDIR) && git describe --tags || echo "debug")
+PKG_RELEASE:=1
+PKG_UNPACK=$(CP) $(SRCDIR)/. $(PKG_BUILD_DIR)
+else
 PKG_VERSION:=4.18.0
 PKG_RELEASE:=1
 
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/v2ray/v2ray-core.git
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://codeload.github.com/v2ray/v2ray-core/tar.gz/$(PKG_VERSION)?
-#PKG_HASH:=0d18418d97d36f986666cf6a979e8e8d0c261bda182d244bb5897f724ae48ce8
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
