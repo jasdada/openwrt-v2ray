@@ -38,7 +38,7 @@ env:
 install:
 - chmod +x $TRAVIS_BUILD_DIR/tag.sh
 - $TRAVIS_BUILD_DIR/tag.sh
-- TRAVIS_TAG=$(cat "$TRAVIS_BUILD_DIR/tag.txt")
+- export TRAVIS_TAG=$(cat "$TRAVIS_BUILD_DIR/tag.txt")
 - echo "v2ray releases $TRAVIS_TAG"
 - |
   if [ -z "$TRAVIS_TAG" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
