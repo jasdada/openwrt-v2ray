@@ -4,53 +4,34 @@ notifications:
   email: false
 language: c
 compiler: gcc
-addons:
-  apt:
-    packages:
-    - libssl-dev
-    - libev-dev
-    - libc-ares-dev
-    - libudns-dev
 cache:
   bundler: true
   directories:
   - "${HOME}/dl"
   - "${HOME}/files"
+  - "${HOME}/feeds"
 git:
   depth: 3
   submodules: false
 env:
   global:
   - PACKAGE=v2ray-core
-  - USER=jsda
+  - USER=kuoruan
   - REPO=openwrt-v2ray
-  - CCACHE_VERSION=3.6
   - DOWNLOAD_DIR=${HOME}/files
-  #- TRAVIS_TAG=$(date +%Y%m%d)
   matrix:
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ar71xx/generic SDK=-sdk-ar71xx-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ramips/mt7620 SDK=-sdk-ramips-mt7620_
+  - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/brcm2708/bcm2710 SDK=-sdk-brcm2708-bcm2710_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/brcm63xx/generic SDK=-sdk-brcm63xx-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/bcm53xx/generic SDK=-sdk-bcm53xx_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/brcm47xx/generic SDK=-sdk-brcm47xx-
+  - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/mvebu/cortexa9 SDK=-sdk-mvebu-cortexa9_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/ipq806x/generic SDK=-sdk-ipq806x_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/generic SDK=-sdk-x86-generic_
   - SDK_PATH=https://downloads.openwrt.org/snapshots/targets/x86/64 SDK=-sdk-x86-64_
-install:
-- (curl --silent "https://api.github.com/repos/v2ray/v2ray-core/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | sed -E 's/v//') > "$TRAVIS_BUILD_DIR/tag.txt"
-- export TRAVIS_TAG=$(cat "$TRAVIS_BUILD_DIR/tag.txt")
-- sed -i "11s/^.*/PKG_VERSION:=$(cat $TRAVIS_BUILD_DIR/tag.txt)/" "$TRAVIS_BUILD_DIR/Makefile"
-- echo "v2ray releases v$(cat $TRAVIS_BUILD_DIR/tag.txt)-$TRAVIS_TAG"
-- |
-  if [ -z "$TRAVIS_TAG" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
-    travis_terminate 0
-  fi
-- mkdir -p "$DOWNLOAD_DIR" && cd "$DOWNLOAD_DIR"
-- wget -c "http://us.archive.ubuntu.com/ubuntu/pool/main/c/ccache/ccache_${CCACHE_VERSION}-1_amd64.deb"
-- mkdir -p "${HOME}/local"
-- sudo apt-get install -yq dpkg
-- dpkg -x "ccache_${CCACHE_VERSION}-1_amd64.deb" "${HOME}/local"
-- export PATH="${HOME}/local/usr/bin:$PATH"
+before_install:
+- test -d "$DOWNLOAD_DIR" || mkdir -p "$DOWNLOAD_DIR"
 - cd "$DOWNLOAD_DIR"
 - wget "${SDK_PATH}/sha256sums" -O sha256sums
 - |
@@ -68,25 +49,37 @@ install:
     fi
   fi
 - file "${DOWNLOAD_DIR}/${SDK_FILE}"
-- export SDK_HOME="$(mktemp -d)"
-- cd "$SDK_HOME"
-- tar -Jxf "${DOWNLOAD_DIR}/${SDK_FILE}" --strip=1
+install:
+- |
+  if [ -z "$TRAVIS_TAG" ] && [ "x$SDK" != "x-sdk-x86-64_" ] ; then
+    travis_terminate 0
+  fi
 - test -d "${HOME}/dl" || mkdir -p "${HOME}/dl"
-- test -d "dl" && rm -rf dl
+- test -d "${HOME}/feeds" || mkdir -p "${HOME}/feeds"
+- export SDK_HOME="$(mktemp -d)"
+- tar -Jxf "${DOWNLOAD_DIR}/${SDK_FILE}" -C "$SDK_HOME" --strip=1
+- cd "$SDK_HOME"
+- test -d "dl" && rm -rf dl || true
+- test -d "feeds" && rm -rf feeds || true
 - ln -s "${HOME}/dl/" dl
+- ln -s "${HOME}/feeds" feeds
 - echo "src-git base https://github.com/openwrt/openwrt.git" >feeds.conf
 - echo "src-git packages https://github.com/openwrt/packages.git" >>feeds.conf
 - echo "src-git luci https://github.com/openwrt/luci.git" >>feeds.conf
 - echo "src-git routing https://git.openwrt.org/feed/routing.git" >>feeds.conf
 - echo "src-git telephony https://github.com/openwrt/telephony.git" >>feeds.conf
 - ln -s "$TRAVIS_BUILD_DIR" "package/${PACKAGE}"
+before_script:
+- cd "$SDK_HOME"
+- ./scripts/feeds update -a >/dev/null
+- ./scripts/feeds install -a >/dev/null
+- make defconfig
 script:
 - cd "$SDK_HOME"
-- "./scripts/feeds update -a >/dev/null"
-- "./scripts/feeds install -a >/dev/null"
-- make defconfig
 - make package/${PACKAGE}/compile V=s
+after_success:
 - find "${SDK_HOME}/bin/"
+before_deploy:
 - find "${SDK_HOME}/bin/" -name v2*.ipk -exec cp {} "$TRAVIS_BUILD_DIR" \;
 - ls -hl "$TRAVIS_BUILD_DIR" | grep .*\.ipk
 deploy:
