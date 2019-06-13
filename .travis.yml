@@ -15,8 +15,8 @@ git:
   submodules: false
 env:
   global:
-  - PACKAGE=v2ray-core
-  - USER=kuoruan
+  - PACKAGE=v2ray
+  - USER=jsda
   - REPO=openwrt-v2ray
   - DOWNLOAD_DIR=${HOME}/files
   matrix:
